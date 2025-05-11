@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db'); // Your database connection
 
-// Get allowed actions for current workflow step
+// Get allowed actions for the current workflow step
 router.get('/allowed-actions', async (req, res) => {
   try {
     // Validate required parameters
@@ -16,7 +16,8 @@ router.get('/allowed-actions', async (req, res) => {
       });
     }
 
-    // Execute PostgreSQL function
+    
+    // Execute PostgreSQL function correspondence
     const result = await db.any(
       `SELECT * FROM get_allowed_actions($1, $2, $3)`,
       [instance_id, step_id, workflow_id]

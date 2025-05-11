@@ -9,10 +9,12 @@ const usersRoutesHasAccess = require('./useraccess')
 const lineItemsRoutes = require('./lineItems'); // Import routes
 const poRoutes = require('./poRoutes'); // Import routes
 const prRoutes= require('./prRoutes'); 
+const poRoutesStandalone= require('./poRoutesStandalone');
 const prToRfq = require('./prToRfq');
 const processServiceRoute = require('./startProcess');
 const getPrRoutes = require('./getPrRoutes');
 const postWorkflowAction = require('./workflowAction')
+
 const port = 3000
 
 
@@ -167,6 +169,49 @@ app.post('/workflow/step/:step_id/action', async (req, res) => {
     }
   });
 
+
+  app.post('/convert/purchase-orders', async (req, res) => {
+    try {
+      const {
+        quotation_id,
+        creator_id,
+        process_type_name,
+        workflow_name,
+        excluded_item_ids = null
+      } = req.body;
+  
+      // Validate required fields
+      if (!quotation_id || !creator_id || !process_type_name || !workflow_name) {
+        return res.status(400).json({ error: 'Missing required fields' });
+      }
+  
+      // Call the PostgreSQL function
+      const result = await pool.query(
+        'SELECT * FROM generate_purchase_order($1, $2, $3, $4, $5::json)',
+        [
+          quotation_id,
+          creator_id,
+          process_type_name,
+          workflow_name,
+          excluded_item_ids ? JSON.stringify(excluded_item_ids) : null
+        ]
+      );
+  
+      res.status(201).json({
+        success: true,
+        po_id: result.rows[0].generate_purchase_order,
+        message: 'Purchase order created successfully'
+      });
+    } catch (error) {
+      console.error('Error creating purchase order:', error);
+      res.status(500).json({ 
+        success: false,
+        error: error.message || 'Failed to create purchase order'
+      });
+    }
+  });
+
+
 //app.use(express.json());
 
 app.use('/agents', usersRoutes);
@@ -179,6 +224,7 @@ app.use('/add-purchase-order', poRoutes)
 app.use('/add-purchase-request', prRoutes)
 app.use('/convert-pr-to-rfq', prToRfq)
 app.use('/getPrRoutes', getPrRoutes)
+app.use('/create/create-po', poRoutesStandalone)
 app.use('/process-Services', processServiceRoute)
 app.use('/workflow-actions', postWorkflowAction )
 

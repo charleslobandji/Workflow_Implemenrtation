@@ -410,7 +410,30 @@ const handleAction = async (instanceId, actionName, userId, comments = null) => 
 };
 
 
+/**
+ * Create Standalone Purchase Order
+ */
+const createStandalonePO = async (supplier_id, po_number, order_date, delivery_date, currency, terms, assigned_to, po_items) => {
+    try {
+        const result = await pool2.query(
+            'SELECT create_standalone_po($1, $2, $3, $4, $5, $6, $7, $8)',
+            [supplier_id, po_number, order_date, delivery_date, currency, terms, assigned_to, JSON.stringify(po_items)]
+        );
+
+        const newPoId = result.rows[0].create_standalone_po;
+
+        return { success: true, message: 'Purchase Order created successfully', po_id: newPoId };
+    } catch (error) {
+        return { success: false, message: 'Database transaction failed', error: error.message };
+    }
+};
+
+
+
+
+
 module.exports = { 
+  createStandalonePO,
   handleAction,
   startBusinessProcess,
   getPurchaseRequest,
