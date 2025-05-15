@@ -413,11 +413,11 @@ const handleAction = async (instanceId, actionName, userId, comments = null) => 
 /**
  * Create Standalone Purchase Order
  */
-const createStandalonePO = async (process_type_name, actor_id, workflow_name, supplier_id, po_number, order_date, delivery_date, currency, terms, assigned_to, po_items) => {
+const createStandalonePO = async (process_type_name, actor_id, workflow_name, supplier_id, order_date, delivery_date, currency, terms, assigned_to, po_items) => {
     try {
         const result = await pool2.query(
-            'SELECT create_standalone_po($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
-            [process_type_name, actor_id, workflow_name, supplier_id, po_number, order_date, delivery_date, currency, terms, assigned_to, JSON.stringify(po_items)]
+            'SELECT create_standalone_po($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+            [process_type_name, actor_id, workflow_name, supplier_id, order_date, delivery_date, currency, terms, assigned_to, JSON.stringify(po_items)]
         );
 
         const newPoId = result.rows[0].create_standalone_po;
