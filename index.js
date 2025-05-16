@@ -213,7 +213,7 @@ app.post('/workflow/step/:step_id/action', async (req, res) => {
 
 
 // Create Purchase Request API Route
-router.post('/purchase-request', async (req, res) => {
+app.post('/purchase-request', async (req, res) => {
     try {
         const { processTypeName, workflowName, requesterId, departmentId, dateNeeded, notes, prItems } = req.body;
 
