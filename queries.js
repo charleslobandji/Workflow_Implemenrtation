@@ -84,8 +84,7 @@ const process_workflow_action = async (request, response) => {
     try{
         const {process_id, action_name, actor_id, comments} = request.body
         const result = await pool.query(`SELECT process_workflow_action(
-          $1::INT, $2::VARCHAR, $3::INT, $4::TEXT
-        ) `,
+          $1::INT, $2::VARCHAR, $3::INT, $4::TEXT) `,
         [
           process_id,
           action_name,
@@ -416,7 +415,7 @@ const handleAction = async (instanceId, actionName, userId, comments = null) => 
 const createStandalonePO = async (process_type_name, actor_id, workflow_name, supplier_id, order_date, delivery_date, currency, terms, assigned_to, po_items) => {
     try {
         const result = await pool2.query(
-            'SELECT create_standalone_po($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+            'SELECT create_standalone_po($1::VARCHAR, $2::INT, $3::VARCHAR, $4::INT, $5::DATE, $6::DATE, $7::VARCHAR, $8::VARCHAR, $9::INT, $10::JSONB)',
             [process_type_name, actor_id, workflow_name, supplier_id, order_date, delivery_date, currency, terms, assigned_to, JSON.stringify(po_items)]
         );
 

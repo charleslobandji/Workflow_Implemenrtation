@@ -212,6 +212,31 @@ app.post('/workflow/step/:step_id/action', async (req, res) => {
   });
 
 
+// Create Purchase Request API Route
+router.post('/purchase-request', async (req, res) => {
+    try {
+        const { processTypeName, workflowName, requesterId, departmentId, dateNeeded, notes, prItems } = req.body;
+
+        // Validate Required Fields
+        if (!processTypeName || !workflowName || !requesterId || !departmentId || !dateNeeded || !prItems) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        const query = `
+            SELECT public.create_purchase_request_02($1, $2, $3, $4, $5, $6, $7) AS pr_number
+        `;
+        const values = [processTypeName, workflowName, requesterId, departmentId, dateNeeded, notes, JSON.stringify(prItems)];
+
+        const result = await pool.query(query, values);
+
+        res.status(201).json({ message: 'Purchase request created successfully', pr_number: result.rows[0].pr_number });
+
+    } catch (error) {
+        console.error('Error creating purchase request:', error);
+        res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    }
+});
+
 //app.use(express.json());
 
 app.use('/agents', usersRoutes);
