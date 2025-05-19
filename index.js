@@ -214,12 +214,12 @@ app.post('/workflow/step/:step_id/action', async (req, res) => {
 
 
 // Create Purchase Request API Route
-router.post('/purchase-request', async (req, res) => {
+app.post('/purchase-request', async (req, res) => {
     try {
         const { processTypeName, workflowName, requesterId, departmentId, dateNeeded, notes, prItems } = req.body;
 
         // Validate Required Fields
-        if (!processTypeName || !workflowName || !requesterId || !departmentId || !dateNeeded || !prItems) {
+        if (!processTypeName || !workflowName || !requesterId || !departmentId || !dateNeeded ||!notes || !prItems) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
