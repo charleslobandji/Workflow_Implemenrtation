@@ -428,10 +428,18 @@ const createStandalonePO = async (process_type_name, actor_id, workflow_name, su
 };
 
 
+const importProducts = async (filePath) => {
+  try{
+  const result = await pool2.query('SELECT import_products_catalogue($1)', [filePath]);
+     return { success: true, message: 'Products data imported successfully'};
+  } catch (error) {
+  return { success: false, message: 'Data Import Failed!', details: error.message};
+}}
 
 
 
 module.exports = { 
+  importProducts,
   createStandalonePO,
   handleAction,
   startBusinessProcess,

@@ -1,6 +1,6 @@
 
-const express = require('express')
-
+const express = require('express');
+const router = express.Router();
 const bodyParser = require('body-parser')
 const app = express()
 const dbb = require('./queries')
@@ -13,7 +13,8 @@ const poRoutesStandalone= require('./poRoutesStandalone');
 const prToRfq = require('./prToRfq');
 const processServiceRoute = require('./startProcess');
 const getPrRoutes = require('./getPrRoutes');
-const postWorkflowAction = require('./workflowAction')
+const postWorkflowAction = require('./workflowAction');
+const importRoutes = require('./routes/products');
 
 const port = 3000
 
@@ -31,7 +32,7 @@ const pool = new Pool({
 app.use(express.json()); // Enable JSON parsing
 //app.use('/line-items', lineItemsRoutes); // Register line items routes
 
-app.use(bodyParser.json())
+// app.use(bodyParser.json())
 
 app.use(bodyParser.urlencoded({extended: true,}))
 
@@ -236,6 +237,8 @@ router.post('/purchase-request', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 });
+
+app.use('/products', importRoutes);
 
 //app.use(express.json());
 
