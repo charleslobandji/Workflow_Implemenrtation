@@ -437,11 +437,12 @@ const importProducts = async (filePath) => {
 }}
 
 
-// Function to get process summary
+// Function to get process summary stats
+
 const getProcessSummary = async (month) => {
     try {
-        const query = 'SELECT * FROM get_process_summary($1)';
-        const values = [month || null]; // Pass NULL if no month provided
+        const query = 'SELECT * FROM get_process_summary($1::TEXT)';
+        const values = [month !== undefined ? month : null]; // Ensure correct NULL handling
         const result = await pool.query(query, values);
         return result.rows;
     } catch (error) {
@@ -449,6 +450,7 @@ const getProcessSummary = async (month) => {
         throw error;
     }
 };
+
 
 
 

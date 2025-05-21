@@ -1,5 +1,5 @@
 const express = require('express');
-const { getProcessSummary } = require('./queries'); // Import queries
+const { getProcessSummary } = require('../queries'); // Import queries
 const router = express.Router();
 
 // API to fetch process summary using exported query function
