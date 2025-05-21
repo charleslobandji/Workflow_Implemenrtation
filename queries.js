@@ -437,8 +437,24 @@ const importProducts = async (filePath) => {
 }}
 
 
+// Function to get process summary
+const getProcessSummary = async (month) => {
+    try {
+        const query = 'SELECT * FROM get_process_summary($1)';
+        const values = [month || null]; // Pass NULL if no month provided
+        const result = await pool.query(query, values);
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query:', error);
+        throw error;
+    }
+};
 
-module.exports = { 
+
+
+
+module.exports = {
+  getProcessSummary, 
   importProducts,
   createStandalonePO,
   handleAction,

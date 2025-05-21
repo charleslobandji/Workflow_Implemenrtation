@@ -15,6 +15,10 @@ const processServiceRoute = require('./startProcess');
 const getPrRoutes = require('./getPrRoutes');
 const postWorkflowAction = require('./workflowAction');
 const importRoutes = require('./routes/products');
+const processRoutes = require('./routes/processStats'); // Import the route
+
+
+
 
 const port = 3000
 
@@ -237,7 +241,7 @@ app.post('/purchase-request', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 });
-
+app.use('/process', processRoutes); // Mount the process routes
 app.use('/products', importRoutes);
 
 //app.use(express.json());
